@@ -6,7 +6,7 @@ Il centralise les logs, génère des rapports de conformité et permet de vérif
 
 ---
 
-## Diagramme Mermaid
+## Flux global
 ```mermaid
 flowchart TD
     %% === Nœuds ===
