@@ -1,4 +1,4 @@
-# Audit, Conformité & Traçabilité : GDPR-KYC-AML
+# 🔐 Audit, Conformité & Traçabilité : GDPR-KYC-AML
 
 ## Objectif
 Ce module assure la **traçabilité et la conformité** du système aux normes **GDPR**, **KYC** et **AML**.  
@@ -6,7 +6,7 @@ Il centralise les logs, génère des rapports de conformité et permet de vérif
 
 ---
 
-## Flux global
+## ♻️ Flux global
 ```mermaid
 flowchart TD
     %% === Nœuds ===
@@ -30,7 +30,7 @@ flowchart TD
 ```
 ---
 
-## Fonctionnalités principales
+## 🧩 Fonctionnalités principales
 
 1. **Centralisation des logs**
    - Collecte des accès, transactions et modifications
@@ -53,7 +53,7 @@ flowchart TD
    - Tableau de bord interactif avec Kibana
 
 ---
-## Structure du projet
+## 📂 Structure du projet
 ```bash
 project_root/
 │
@@ -144,7 +144,7 @@ project_root/
 
 ---
 
-## Installation
+## ⚙️ Installation
 
 ```bash
 # Installer les dépendances Python
