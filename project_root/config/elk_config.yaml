@@ -1,0 +1,97 @@
+# ============================================
+#  Configuration Elasticsearch / Logstash / Kibana
+# ============================================
+
+# --- Elasticsearch Configuration ---
+elasticsearch:
+  host: "http://localhost"
+  port: 9200
+  username: "elastic"
+  password: "changeme"
+  index_prefix: "compliance-logs"
+  ssl_enabled: false
+  verify_certs: false
+  timeout: 30
+  retry_on_timeout: true
+  max_retries: 3
+
+# --- Logstash Configuration ---
+logstash:
+  host: "localhost"
+  port: 5044
+  protocol: "http"
+  endpoint: "/logs"
+  batch_size: 200
+  flush_interval: 5  # secondes
+  enabled: true
+
+# --- Kibana Configuration ---
+kibana:
+  host: "http://localhost"
+  port: 5601
+  default_space: "compliance"
+  dashboards:
+    - name: "Audit Dashboard"
+      file: "dashboards/kibana/audit_dashboard.json"
+      import: true
+    - name: "AML/KYC Dashboard"
+      file: "dashboards/kibana/aml_kyc_dashboard.json"
+      import: true
+    - name: "GDPR Dashboard"
+      file: "dashboards/kibana/gdpr_dashboard.json"
+      import: true
+
+# --- Index Management ---
+indices:
+  audit:
+    name: "audit-logs-*"
+    rollover_max_age: "7d"
+    shards: 3
+    replicas: 1
+  compliance:
+    name: "compliance-logs-*"
+    rollover_max_age: "7d"
+    shards: 3
+    replicas: 1
+  security:
+    name: "security-logs-*"
+    rollover_max_age: "14d"
+    shards: 2
+    replicas: 1
+
+# --- Retention Policy ---
+retention:
+  audit_logs: "30d"
+  compliance_logs: "90d"
+  gdpr_logs: "180d"
+
+# --- Alerting and Monitoring ---
+alerting:
+  enabled: true
+  rules:
+    - name: "AML_Alert_HighRisk"
+      condition: "transaction_risk > 0.9"
+      action: "send_email"
+      recipients:
+        - "aml_officer@company.com"
+    - name: "GDPR_Delete_Request"
+      condition: "event_type == 'right_to_be_forgotten'"
+      action: "trigger_cleanup_job"
+    - name: "System_Error"
+      condition: "level == 'ERROR'"
+      action: "send_slack"
+      webhook_url: "https://hooks.slack.com/services/XXXXX/YYYYY/ZZZZZ"
+
+# --- Log Fields Mapping (pour ingestion Logstash/Elasticsearch) ---
+mappings:
+  dynamic: true
+  properties:
+    timestamp: { type: "date" }
+    level: { type: "keyword" }
+    logger: { type: "keyword" }
+    message: { type: "text" }
+    user_id: { type: "keyword" }
+    ip_address: { type: "ip" }
+    event_type: { type: "keyword" }
+    transaction_id: { type: "keyword" }
+    compliance_status: { type: "keyword" }
