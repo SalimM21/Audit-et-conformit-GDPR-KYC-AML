@@ -1,0 +1,89 @@
+# ==========================================================
+# Fichier : gdpr_config.yaml
+# Objectif : Définir les champs personnels, les stratégies
+# d’anonymisation, et les processus liés au droit à l’oubli.
+# ==========================================================
+
+gdpr:
+  metadata:
+    version: "1.0"
+    last_updated: "2025-10-27"
+    owner: "Compliance Team"
+    description: >
+      Configuration des règles GDPR pour garantir la protection des données personnelles
+      (anonymisation, droit à l’oubli, traçabilité).
+
+  # ----------------------------------------------------------------
+  # Définition des champs personnels à protéger ou anonymiser
+  # ----------------------------------------------------------------
+  personal_data_fields:
+    - name: "first_name"
+      type: "string"
+      anonymization: "hash"
+      required: true
+      comment: "Nom de l’utilisateur, remplacé par un hash SHA-256."
+    - name: "last_name"
+      type: "string"
+      anonymization: "hash"
+      required: true
+      comment: "Prénom de l’utilisateur, remplacé par un hash SHA-256."
+    - name: "email"
+      type: "string"
+      anonymization: "mask"
+      pattern: "(?<=.{2}).(?=[^@]*?@)"
+      comment: "Masquage des adresses e-mails (ex: j***@domaine.com)"
+    - name: "phone_number"
+      type: "string"
+      anonymization: "mask"
+      pattern: "(?<=\\d{2})\\d(?=\\d{2})"
+      comment: "Masquage du numéro de téléphone"
+    - name: "address"
+      type: "string"
+      anonymization: "remove"
+      comment: "Suppression complète des adresses postales"
+    - name: "birth_date"
+      type: "date"
+      anonymization: "generalize"
+      rule: "convert_to_year"
+      comment: "Généralisation (ex : 1990-05-12 → 1990)"
+
+  # ----------------------------------------------------------------
+  # Règles du droit à l’oubli
+  # ----------------------------------------------------------------
+  right_to_be_forgotten:
+    enabled: true
+    trigger: "user_request"
+    retention_period_days: 30  # délai avant suppression définitive
+    deletion_strategy: "logical"  # "logical" ou "physical"
+    audit_log:
+      enabled: true
+      log_index: "gdpr_audit_log"
+      fields_tracked:
+        - user_id
+        - deletion_date
+        - status
+        - operator
+
+  # ----------------------------------------------------------------
+  # Règles d’accès et de conformité
+  # ----------------------------------------------------------------
+  compliance_rules:
+    access_control:
+      authorized_roles:
+        - "compliance_officer"
+        - "data_protection_admin"
+    data_export:
+      format: "JSON"
+      encryption: "AES256"
+      description: "Export sécurisé pour transfert de données sur demande de l’utilisateur."
+    audit_frequency_days: 90  # Fréquence des audits GDPR
+
+  # ----------------------------------------------------------------
+  # Intégration avec le système ELK
+  # ----------------------------------------------------------------
+  elk_integration:
+    enabled: true
+    elasticsearch_index: "gdpr_compliance_events"
+    logstash_pipeline: "gdpr_pipeline.conf"
+    kibana_dashboard: "gdpr_monitoring_dashboard"
+
