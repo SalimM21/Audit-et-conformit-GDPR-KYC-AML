@@ -7,6 +7,81 @@ Il centralise les logs, génère des rapports de conformité et permet de vérif
 ---
 
 ## ♻️ Flux global
+
+```mermaid
+flowchart TD
+    %% === STYLES ===
+    classDef user fill:#f9f9b3,stroke:#b3b300,stroke-width:2px,color:#000;
+    classDef auth fill:#c6e2ff,stroke:#0066cc,stroke-width:1.5px,color:#000;
+    classDef data fill:#e2ffe2,stroke:#009933,stroke-width:1.5px,color:#000;
+    classDef storage fill:#ffe6cc,stroke:#cc6600,stroke-width:1.5px,color:#000;
+    classDef monitoring fill:#f0d9ff,stroke:#8000ff,stroke-width:1.5px,color:#000;
+    classDef report fill:#ffd6e7,stroke:#b30059,stroke-width:1.5px,color:#000;
+
+    %% === UTILISATEUR ===
+    subgraph U[👤 Utilisateur]
+        User[Utilisateur final]
+    end
+    class User user;
+
+    %% === SÉCURITÉ & AUTHENTIFICATION ===
+    subgraph S[🔐 Sécurité & Authentification]
+        Auth[Module Authentification : RBAC, ACL, MFA, OAuth2]
+        KYC[Module KYC : Collecte documents, Vérification automatique, Validation manuelle]
+    end
+    class Auth,KYC auth;
+
+    %% === TRAITEMENT DES DONNÉES ===
+    subgraph D[🧩 Gestion et Traitement des Données]
+        Data[Gestion des Données : Stockage sécurisé AES, Traçabilité, Accès API limité]
+        App[Application / API : Validation, Masquage / Hachage PII, Accès aux données]
+    end
+    class Data,App data;
+
+    %% === STOCKAGE & TRANSMISSION ===
+    subgraph T[💾 Stockage & Transmission Sécurisée]
+        TLS[Chiffrement en transit : TLS 1.2 / 1.3]
+        DB[Stockage / Bases de données : Chiffrement AES-256, Gestion des clés KMS]
+    end
+    class TLS,DB storage;
+
+    %% === SURVEILLANCE & CONFORMITÉ ===
+    subgraph M[🛡️ Surveillance & Conformité]
+        Logs[Logging centralisé ELK : Logstash, Elasticsearch, Kibana]
+        AML[Rapports AML/KYC : Transactions suspectes, Alertes]
+        GDPRCheck[Vérification GDPR : Droit à l’oubli, Accès / rectification, Anonymisation]
+        Alerts[Alertes & SIEM : Intrusion, Anomalies]
+        Audit[Audit & Compliance : Historique, Traçabilité, Export PDF/CSV]
+    end
+    class Logs,AML,GDPRCheck,Alerts,Audit monitoring;
+
+    %% === REPORTING ===
+    subgraph R[📊 Reporting & BI]
+        BI[Dashboards / BI : Données anonymisées, Reporting safe]
+    end
+    class BI report;
+
+    %% === FLUX DE DONNÉES ===
+    User -->|Authentification / Consentement GDPR| Auth
+    Auth --> KYC
+    KYC --> Data
+    Data --> App
+    App -->|Transmission sécurisée| TLS
+    TLS --> DB
+
+    DB --> Logs
+    DB --> BI
+
+    Logs --> AML
+    Logs --> GDPRCheck
+    Logs --> Alerts
+
+    AML --> Audit
+    GDPRCheck --> Audit
+    Alerts --> Audit
+```
+---
+
 ```mermaid
 flowchart TD
     %% === Nœuds ===
