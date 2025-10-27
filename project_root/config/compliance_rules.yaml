@@ -1,0 +1,116 @@
+# ==========================================================
+# Fichier : compliance_rules.yaml
+# Objectif : Définir les règles AML/KYC, les seuils d’alerte
+# et les stratégies de conformité pour le système d’audit.
+# ==========================================================
+
+compliance:
+  metadata:
+    version: "1.0"
+    last_updated: "2025-10-27"
+    owner: "Compliance Team"
+    description: >
+      Règles de conformité pour la détection de comportements suspects
+      liés au blanchiment d’argent (AML) et à la vérification KYC.
+
+  # ----------------------------------------------------------------
+  # MODULE KYC : vérification d’identité et complétude des profils
+  # ----------------------------------------------------------------
+  kyc_rules:
+    required_documents:
+      - "national_id"
+      - "proof_of_address"
+      - "bank_statement"
+    validation_threshold:
+      min_fields_completed: 90   # % de champs obligatoires complétés
+      comment: "Un profil incomplet en dessous de ce seuil déclenche une alerte KYC."
+    verification_checks:
+      - name: "document_expiry_check"
+        type: "date_validation"
+        description: "Vérifie la validité des documents d’identité."
+      - name: "duplicate_identity_check"
+        type: "cross_reference"
+        description: "Compare les identités pour détecter les doublons."
+      - name: "blacklist_screening"
+        type: "external_api"
+        endpoint: "https://api.sanctions.io/check"
+        description: "Contrôle de l’utilisateur sur les listes de sanctions internationales."
+
+  # ----------------------------------------------------------------
+  # MODULE AML : détection d’activités suspectes
+  # ----------------------------------------------------------------
+  aml_rules:
+    transaction_thresholds:
+      daily_limit: 10000          # Montant max par jour (€)
+      monthly_limit: 50000        # Montant max par mois (€)
+      alert_level_1: 5000         # Niveau d’avertissement
+      alert_level_2: 20000        # Niveau critique
+      comment: "Les montants dépassant ces seuils déclenchent une alerte AML."
+    suspicious_patterns:
+      - name: "rapid_transfers"
+        description: "Transactions multiples en moins de 10 minutes."
+        detection_window_minutes: 10
+        transaction_count_threshold: 3
+      - name: "round_amounts"
+        description: "Transactions récurrentes avec montants ronds (ex: 1000€, 5000€)."
+        pattern: "^[1-9][0-9]*000$"
+      - name: "geo_mismatch"
+        description: "Incohérence entre pays d’origine et pays de destination."
+        rule: "source_country != destination_country"
+      - name: "cash_intensive_behavior"
+        description: "Dépôts en espèces répétés dépassant le seuil AML."
+        threshold: 2000
+        frequency_days: 7
+
+  # ----------------------------------------------------------------
+  # GESTION DES ALERTES ET ESCALADES
+  # ----------------------------------------------------------------
+  alerting:
+    enabled: true
+    channels:
+      - "email"
+      - "slack"
+      - "siem"
+    escalation_levels:
+      level_1:
+        trigger: "alert_level_1"
+        action: "notify_compliance_team"
+      level_2:
+        trigger: "alert_level_2"
+        action: "escalate_to_regulator"
+    notification_templates:
+      email_subject: "[ALERTE COMPLIANCE] Niveau {{level}} détecté"
+      email_body: >
+        Une anomalie de conformité a été détectée :
+        - Type : {{rule_name}}
+        - Niveau : {{alert_level}}
+        - Utilisateur : {{user_id}}
+        - Détails : {{details}}
+
+  # ----------------------------------------------------------------
+  # AUDIT ET INTÉGRATION ELK
+  # ----------------------------------------------------------------
+  audit_logging:
+    enabled: true
+    elasticsearch_index: "compliance_audit_log"
+    logstash_pipeline: "compliance_pipeline.conf"
+    kibana_dashboard: "compliance_dashboard"
+    retention_days: 180
+    tracked_events:
+      - "kyc_validation_failed"
+      - "aml_alert_triggered"
+      - "user_blacklisted"
+      - "escalation_sent"
+
+  # ----------------------------------------------------------------
+  # INTERACTIONS AVEC LE MODULE GDPR
+  # ----------------------------------------------------------------
+  gdpr_integration:
+    anonymize_on_deletion: true
+    compliance_exceptions:
+      - "regulatory_hold"  # Données conservées temporairement pour les enquêtes AML
+    shared_fields:
+      - "user_id"
+      - "transaction_id"
+      - "timestamp"
+
