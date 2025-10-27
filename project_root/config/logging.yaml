@@ -1,0 +1,85 @@
+# ============================================
+#  Paramètres et format des logs centralisés
+# ============================================
+
+version: 1
+
+# --- Formatters : définition des formats de logs ---
+formatters:
+  standard:
+    format: "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
+  detailed:
+    format: "%(asctime)s | %(levelname)-8s | %(name)s | %(filename)s:%(lineno)d | %(message)s"
+  json:
+    # Format JSON pour envoi à ELK
+    format: >
+      {
+        "timestamp": "%(asctime)s",
+        "level": "%(levelname)s",
+        "logger": "%(name)s",
+        "file": "%(filename)s",
+        "line": "%(lineno)d",
+        "message": "%(message)s"
+      }
+
+# --- Handlers : destinations des logs ---
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: standard
+    stream: ext://sys.stdout
+
+  file_audit:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: INFO
+    formatter: detailed
+    filename: logs/system_events.log
+    when: midnight
+    backupCount: 10
+    encoding: utf8
+
+  file_compliance:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: logs/compliance_logs/aml_alerts.log
+    when: midnight
+    backupCount: 30
+    encoding: utf8
+
+  elasticsearch:
+    class: logging.handlers.HTTPHandler
+    level: INFO
+    formatter: json
+    # Exemple : endpoint Logstash HTTP
+    host: "localhost:5044"
+    url: "/logs"
+    method: "POST"
+
+# --- Loggers : configuration par module ---
+loggers:
+  audit:
+    level: INFO
+    handlers: [console, file_audit, elasticsearch]
+    propagate: no
+
+  compliance:
+    level: INFO
+    handlers: [console, file_compliance, elasticsearch]
+    propagate: no
+
+  security:
+    level: WARNING
+    handlers: [console, file_audit]
+    propagate: no
+
+  utils:
+    level: INFO
+    handlers: [console]
+    propagate: no
+
+# --- Logger racine ---
+root:
+  level: INFO
+  handlers: [console, file_audit]
