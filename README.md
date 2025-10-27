@@ -19,7 +19,7 @@ flowchart TD
     classDef report fill:#ffd6e7,stroke:#b30059,stroke-width:1.5px,color:#000;
 
     %% === UTILISATEUR ===
-    subgraph U[👤 Utilisateur]
+    subgraph U[ Utilisateur]
         User[Utilisateur final]
     end
     class User user;
@@ -32,14 +32,14 @@ flowchart TD
     class Auth,KYC auth;
 
     %% === TRAITEMENT DES DONNÉES ===
-    subgraph D[🧩 Gestion et Traitement des Données]
+    subgraph D[ Gestion et Traitement des Données]
         Data[Gestion des Données : Stockage sécurisé AES, Traçabilité, Accès API limité]
         App[Application / API : Validation, Masquage / Hachage PII, Accès aux données]
     end
     class Data,App data;
 
     %% === STOCKAGE & TRANSMISSION ===
-    subgraph T[💾 Stockage & Transmission Sécurisée]
+    subgraph T[ Stockage & Transmission Sécurisée]
         TLS[Chiffrement en transit : TLS 1.2 / 1.3]
         DB[Stockage / Bases de données : Chiffrement AES-256, Gestion des clés KMS]
     end
