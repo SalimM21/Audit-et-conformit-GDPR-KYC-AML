@@ -1,0 +1,101 @@
+{
+  "dashboard": {
+    "id": "gdpr_dashboard",
+    "title": "Tableau de Bord GDPR - Protection des Données & Anonymisation",
+    "description": "Suivi du respect du droit à l’oubli, des opérations d’anonymisation et des demandes de suppression.",
+    "visualizations": [
+      {
+        "id": "gdpr_deletion_requests_timeseries",
+        "type": "line",
+        "title": "Évolution des demandes de suppression (Droit à l’oubli)",
+        "index_pattern": "gdpr_requests*",
+        "time_field": "@timestamp",
+        "metrics": [
+          { "type": "count" }
+        ],
+        "group_by": "day"
+      },
+      {
+        "id": "gdpr_status_pie",
+        "type": "pie",
+        "title": "Statuts des demandes GDPR",
+        "index_pattern": "gdpr_requests*",
+        "buckets": {
+          "field": "status.keyword"
+        }
+      },
+      {
+        "id": "gdpr_avg_response_time",
+        "type": "metric",
+        "title": "Temps moyen de traitement (heures)",
+        "index_pattern": "gdpr_requests*",
+        "metric": {
+          "type": "avg",
+          "field": "response_time_hours"
+        }
+      },
+      {
+        "id": "anonymization_activity_bar",
+        "type": "bar",
+        "title": "Opérations d’anonymisation par type de donnée",
+        "index_pattern": "gdpr_anonymization*",
+        "x_axis": "data_type.keyword",
+        "metric": {
+          "type": "count"
+        }
+      },
+      {
+        "id": "gdpr_failed_operations_table",
+        "type": "table",
+        "title": "Opérations échouées (à investiguer)",
+        "index_pattern": "gdpr_logs*",
+        "columns": [
+          "operation_id",
+          "user_id",
+          "operation_type",
+          "status",
+          "error_message",
+          "timestamp"
+        ],
+        "filters": {
+          "status.keyword": ["failed", "error"]
+        }
+      },
+      {
+        "id": "gdpr_country_heatmap",
+        "type": "heatmap",
+        "title": "Demandes GDPR par pays",
+        "index_pattern": "gdpr_requests*",
+        "x_axis": "country.keyword",
+        "y_axis": "request_type.keyword",
+        "metric": {
+          "type": "count"
+        }
+      },
+      {
+        "id": "gdpr_compliance_rate_gauge",
+        "type": "gauge",
+        "title": "Taux global de conformité GDPR (%)",
+        "index_pattern": "gdpr_summary*",
+        "metric": {
+          "type": "avg",
+          "field": "compliance_rate"
+        },
+        "color_thresholds": [
+          { "value": 95, "color": "green" },
+          { "value": 80, "color": "orange" },
+          { "value": 60, "color": "red" }
+        ]
+      }
+    ],
+    "layout": [
+      { "id": "gdpr_deletion_requests_timeseries", "x": 0, "y": 0, "w": 8, "h": 3 },
+      { "id": "gdpr_status_pie", "x": 8, "y": 0, "w": 4, "h": 3 },
+      { "id": "gdpr_avg_response_time", "x": 0, "y": 3, "w": 4, "h": 2 },
+      { "id": "gdpr_compliance_rate_gauge", "x": 4, "y": 3, "w": 4, "h": 2 },
+      { "id": "anonymization_activity_bar", "x": 8, "y": 3, "w": 4, "h": 3 },
+      { "id": "gdpr_failed_operations_table", "x": 0, "y": 5, "w": 12, "h": 4 },
+      { "id": "gdpr_country_heatmap", "x": 0, "y": 9, "w": 12, "h": 4 }
+    ]
+  }
+}
