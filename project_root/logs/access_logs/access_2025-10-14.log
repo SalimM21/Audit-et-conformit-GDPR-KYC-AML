@@ -1,0 +1,16 @@
+2025-10-14 08:12:05 INFO User login successful: user_id=101, username=john.doe, ip=192.168.1.10
+2025-10-14 08:15:22 INFO User login failed: user_id=102, username=jane.smith, ip=192.168.1.12, reason=wrong_password
+2025-10-14 08:18:47 INFO User logout: user_id=101, username=john.doe
+2025-10-14 09:02:10 INFO User login successful: user_id=103, username=bob.martin, ip=192.168.1.15
+2025-10-14 09:15:33 WARN Suspicious activity detected: user_id=102, username=jane.smith, ip=192.168.1.12, reason=multiple_failed_logins
+2025-10-14 09:45:05 INFO User password changed: user_id=103, username=bob.martin
+2025-10-14 10:12:11 INFO User login successful: user_id=104, username=alice.jones, ip=192.168.1.18
+2025-10-14 10:15:45 INFO User logout: user_id=103, username=bob.martin
+2025-10-14 10:47:32 WARN Suspicious login location: user_id=104, username=alice.jones, ip=203.0.113.45, country=FR
+2025-10-14 11:05:20 INFO User login successful: user_id=105, username=charlie.brown, ip=192.168.1.20
+2025-10-14 11:12:44 INFO User logout: user_id=105, username=charlie.brown
+2025-10-14 11:30:10 WARN Multiple failed login attempts: user_id=102, username=jane.smith, ip=192.168.1.12
+2025-10-14 11:55:01 INFO User login successful: user_id=102, username=jane.smith, ip=192.168.1.12
+2025-10-14 12:22:18 INFO User logout: user_id=104, username=alice.jones
+2025-10-14 12:45:33 INFO User login successful: user_id=106, username=david.lee, ip=192.168.1.25
+2025-10-14 12:50:12 INFO User logout: user_id=106, username=david.lee

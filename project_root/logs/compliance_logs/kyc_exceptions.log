@@ -1,0 +1,5 @@
+2025-10-14 08:45:05 ERROR KYC incomplete documents: user_id=102, username=jane.smith, missing=['utility_bill']
+2025-10-14 09:25:33 ERROR KYC invalid date of birth: user_id=109, username=sarah.lee, dob=''
+2025-10-14 10:12:11 ERROR KYC missing required document: user_id=110, username=peter.parker, missing=['passport']
+2025-10-14 11:05:20 ERROR KYC incomplete documents: user_id=111, username=linda.kim, missing=['utility_bill','id_card']
+2025-10-14 12:22:18 ERROR KYC validation failed: user_id=112, username=tom.hanks, missing=['passport']

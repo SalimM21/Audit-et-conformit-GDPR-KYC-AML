@@ -1,0 +1,16 @@
+2025-10-14 08:00:01 INFO System startup initiated
+2025-10-14 08:01:15 INFO Database connection established: host=db-prod, port=5432
+2025-10-14 08:02:10 INFO Message broker connected: Kafka cluster online
+2025-10-14 08:12:05 INFO Scheduled jobs loaded: audit_job, gdpr_cleanup, aml_monitor
+2025-10-14 08:30:20 WARN High memory usage detected: 85% used
+2025-10-14 09:00:01 INFO Backup completed successfully: /backups/backup_2025-10-14.tar.gz
+2025-10-14 09:15:33 ERROR Failed to fetch data from API endpoint: https://external-api.example.com/data
+2025-10-14 09:45:05 INFO System health check passed: all services operational
+2025-10-14 10:12:11 WARN CPU usage spike detected: 92% load
+2025-10-14 10:47:32 INFO Security scan completed: no threats detected
+2025-10-14 11:05:20 INFO Configuration reload: logging.yaml updated
+2025-10-14 11:30:10 ERROR Job execution failed: gdpr_cleanup_job, reason=TimeoutError
+2025-10-14 11:55:01 INFO New user registration processed: user_id=113, username=sam.wilson
+2025-10-14 12:22:18 INFO Scheduled jobs completed: audit_job, aml_monitor
+2025-10-14 12:45:33 WARN Disk space low: /var/log usage at 90%
+2025-10-14 12:50:12 INFO System shutdown initiated
