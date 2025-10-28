@@ -1,0 +1,5 @@
+2025-10-14 08:20:05 ALERT AML threshold exceeded: user_id=107, username=mark.taylor, amount=15000, country=US
+2025-10-14 09:15:33 ALERT User on AML watchlist: user_id=102, username=jane.smith, transaction_id=TX1002
+2025-10-14 10:47:32 ALERT AML suspicious transaction: user_id=104, username=alice.jones, amount=12000, country=FR
+2025-10-14 11:30:10 ALERT Multiple large transactions detected: user_id=102, username=jane.smith, total_amount=35000
+2025-10-14 12:22:18 ALERT AML threshold exceeded: user_id=108, username=emily.clark, amount=20000, country=UK
