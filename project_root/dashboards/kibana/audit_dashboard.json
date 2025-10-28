@@ -1,0 +1,110 @@
+{
+  "dashboard": {
+    "id": "audit-dashboard-001",
+    "title": "Audit & Compliance Dashboard",
+    "description": "Tableau de bord centralisé pour la surveillance des logs d’accès, audits et alertes de conformité.",
+    "version": 1,
+    "created_at": "2025-10-28T10:00:00Z",
+    "author": "Service Conformité",
+    "panels": [
+      {
+        "id": "panel_1",
+        "type": "metric",
+        "title": "Total des connexions utilisateurs",
+        "index_pattern": "access_logs-*",
+        "visualization": {
+          "metric_field": "user_id",
+          "aggregation": "count"
+        },
+        "position": { "x": 0, "y": 0, "w": 24, "h": 4 }
+      },
+      {
+        "id": "panel_2",
+        "type": "pie",
+        "title": "Répartition des types d’actions",
+        "index_pattern": "access_logs-*",
+        "visualization": {
+          "aggregation": "terms",
+          "field": "action.keyword",
+          "size": 10
+        },
+        "position": { "x": 0, "y": 4, "w": 12, "h": 6 }
+      },
+      {
+        "id": "panel_3",
+        "type": "line",
+        "title": "Évolution des logs par jour",
+        "index_pattern": "access_logs-*",
+        "visualization": {
+          "x_axis": "timestamp",
+          "y_axis": "count",
+          "aggregation": "date_histogram",
+          "interval": "1d"
+        },
+        "position": { "x": 12, "y": 4, "w": 12, "h": 6 }
+      },
+      {
+        "id": "panel_4",
+        "type": "table",
+        "title": "Dernières actions utilisateurs",
+        "index_pattern": "access_logs-*",
+        "visualization": {
+          "columns": ["timestamp", "user_id", "action", "status", "ip_address"],
+          "sort": { "field": "timestamp", "order": "desc" },
+          "size": 20
+        },
+        "position": { "x": 0, "y": 10, "w": 24, "h": 8 }
+      },
+      {
+        "id": "panel_5",
+        "type": "metric",
+        "title": "Alertes de sécurité actives",
+        "index_pattern": "compliance_logs-*",
+        "visualization": {
+          "aggregation": "count",
+          "query": "level:CRITICAL OR level:HIGH"
+        },
+        "position": { "x": 0, "y": 18, "w": 12, "h": 4 }
+      },
+      {
+        "id": "panel_6",
+        "type": "bar",
+        "title": "Top 5 IP suspectes",
+        "index_pattern": "access_logs-*",
+        "visualization": {
+          "aggregation": "terms",
+          "field": "ip_address.keyword",
+          "size": 5
+        },
+        "position": { "x": 12, "y": 18, "w": 12, "h": 4 }
+      },
+      {
+        "id": "panel_7",
+        "type": "gauge",
+        "title": "Taux de conformité (GDPR / KYC)",
+        "index_pattern": "compliance_logs-*",
+        "visualization": {
+          "aggregation": "avg",
+          "field": "compliance_score",
+          "min": 0,
+          "max": 100,
+          "unit": "%"
+        },
+        "position": { "x": 0, "y": 22, "w": 24, "h": 4 }
+      }
+    ]
+  },
+  "index_patterns": [
+    "access_logs-*",
+    "compliance_logs-*"
+  ],
+  "refresh_interval": {
+    "value": 60000,
+    "pause": false
+  },
+  "theme": {
+    "background": "#f5f6fa",
+    "text_color": "#222",
+    "accent_color": "#007acc"
+  }
+}
