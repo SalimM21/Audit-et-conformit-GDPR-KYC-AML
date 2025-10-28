@@ -1,0 +1,93 @@
+{
+  "dashboard": {
+    "id": "aml_kyc_dashboard",
+    "title": "Tableau de Bord KYC / AML - Conformité & Surveillance",
+    "description": "Suivi des transactions suspectes, complétude des dossiers KYC et conformité AML en temps réel.",
+    "visualizations": [
+      {
+        "id": "kyc_completeness_gauge",
+        "type": "gauge",
+        "title": "Taux de complétude KYC (%)",
+        "index_pattern": "kyc_logs*",
+        "metric": {
+          "type": "avg",
+          "field": "kyc_completeness"
+        },
+        "color_thresholds": [
+          { "value": 90, "color": "green" },
+          { "value": 70, "color": "orange" },
+          { "value": 50, "color": "red" }
+        ]
+      },
+      {
+        "id": "kyc_status_pie",
+        "type": "pie",
+        "title": "Répartition des statuts KYC",
+        "index_pattern": "kyc_logs*",
+        "buckets": {
+          "field": "kyc_status.keyword"
+        }
+      },
+      {
+        "id": "aml_alerts_timeseries",
+        "type": "line",
+        "title": "Évolution des alertes AML par jour",
+        "index_pattern": "aml_alerts*",
+        "time_field": "@timestamp",
+        "metrics": [
+          {
+            "type": "count"
+          }
+        ],
+        "group_by": "day"
+      },
+      {
+        "id": "transaction_amount_heatmap",
+        "type": "heatmap",
+        "title": "Montants moyens des transactions par pays et niveau de risque",
+        "index_pattern": "transactions*",
+        "x_axis": "country.keyword",
+        "y_axis": "risk_level.keyword",
+        "metric": {
+          "type": "avg",
+          "field": "amount"
+        }
+      },
+      {
+        "id": "high_risk_clients_table",
+        "type": "table",
+        "title": "Clients à haut risque",
+        "index_pattern": "kyc_logs*",
+        "columns": [
+          "client_id",
+          "country",
+          "risk_level",
+          "kyc_status",
+          "last_updated"
+        ],
+        "filters": {
+          "risk_level.keyword": ["High", "Critical"]
+        }
+      },
+      {
+        "id": "aml_geolocation_map",
+        "type": "map",
+        "title": "Carte des activités suspectes par localisation",
+        "index_pattern": "aml_alerts*",
+        "geo_field": "location",
+        "metric": {
+          "type": "count"
+        },
+        "layer_style": "heat"
+      }
+    ],
+    "layout": [
+      { "id": "kyc_completeness_gauge", "x": 0, "y": 0, "w": 4, "h": 3 },
+      { "id": "kyc_status_pie", "x": 4, "y": 0, "w": 4, "h": 3 },
+      { "id": "aml_alerts_timeseries", "x": 0, "y": 3, "w": 8, "h": 3 },
+      { "id": "transaction_amount_heatmap", "x": 0, "y": 6, "w": 8, "h": 3 },
+      { "id": "high_risk_clients_table", "x": 0, "y": 9, "w": 8, "h": 4 },
+      { "id": "aml_geolocation_map", "x": 0, "y": 13, "w": 8, "h": 4 }
+    ]
+  }
+}
